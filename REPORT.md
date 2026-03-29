@@ -32,7 +32,7 @@ The agent called lms_labs first, listed all 8 labs, then asked: "Which lab would
 
 ## Task 2B — Web client
 
-<!-- Screenshot of a conversation with the agent in the Flutter web app -->
+<img width="951" height="992" alt="task2" src="https://github.com/user-attachments/assets/69beadca-5229-47c9-9bf8-30940aa42216" />
 
 ## Task 3A — Structured logging
 
