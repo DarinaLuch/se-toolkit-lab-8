@@ -1,18 +1,30 @@
 # Lab 8 — Report
 
-Paste your checkpoint evidence below. Add screenshots as image files in the repo and reference them with `![description](path)`.
-
 ## Task 1A — Bare agent
 
-<!-- Paste the agent's response to "What is the agentic loop?" and "What labs are available in our LMS?" -->
+**Q: What is the agentic loop?**
+
+The agentic loop is the core reasoning-and-action cycle that enables AI agents to work autonomously toward goals. The basic cycle: Observe → Think → Act → Repeat. In nanobot, the loop is built-in — it receives input, sends context to the LLM with available tools, parses tool calls, executes them, feeds results back, and repeats until done.
+
+**Q: What labs are available in our LMS?**
+
+The agent read from local workspace files and described the lab tasks (Set Up the Agent, Deploy the Agent, etc.) — it did NOT call the real LMS backend. This is expected behavior without MCP tools.
 
 ## Task 1B — Agent with LMS tools
 
-<!-- Paste the agent's response to "What labs are available?" and "Describe the architecture of the LMS system" -->
+**Q: What labs are available?**
+
+lab-01, lab-02, lab-03, lab-04, lab-05, lab-06, lab-07, lab-08 — real data from the LMS backend via MCP tools.
+
+**Q: Describe the architecture of the LMS system**
+
+The agent described: LMS Backend (FastAPI), PostgreSQL, React Dashboard, Caddy reverse proxy, Nanobot Agent, Qwen Code API, Flutter Web UI, MCP Servers, OpenTelemetry Collector, VictoriaLogs, VictoriaTraces. All services communicate over the lms-network Docker network.
 
 ## Task 1C — Skill prompt
 
-<!-- Paste the agent's response to "Show me the scores" (without specifying a lab) -->
+**Q: Show me the scores** (without specifying a lab)
+
+The agent called lms_labs first, listed all 8 labs, then asked: "Which lab would you like to see scores for?" — correct behavior per the skill prompt.
 
 ## Task 2A — Deployed agent
 
