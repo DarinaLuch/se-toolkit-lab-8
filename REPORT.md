@@ -36,11 +36,14 @@ The agent called lms_labs first, listed all 8 labs, then asked: "Which lab would
 
 ## Task 3A — Structured logging
 
-<!-- Paste happy-path and error-path log excerpts, VictoriaLogs query screenshot -->
+<img width="1916" height="1073" alt="3 1 2" src="https://github.com/user-attachments/assets/1d6c541a-5e7b-46d4-9350-3c27a222df3c" />
+<img width="1912" height="985" alt="3 1 1" src="https://github.com/user-attachments/assets/bba95376-9604-4ecd-b3d9-881f6f6ed775" />
+
 
 ## Task 3B — Traces
 
-<!-- Screenshots: healthy trace span hierarchy, error trace -->
+<img width="1037" height="362" alt="3 2" src="https://github.com/user-attachments/assets/f78e0655-5b08-45b7-985b-16a5ad20402f" />
+
 
 ## Task 3C — Observability MCP tools
 
