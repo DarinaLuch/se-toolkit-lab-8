@@ -225,3 +225,36 @@ async def main(base_url: str | None = None) -> None:
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+# ---------------------------------------------------------------------------
+# Observability tools
+# ---------------------------------------------------------------------------
+from mcp_lms.observability import (
+    logs_search, logs_error_count, traces_list, traces_get,
+    _LogsSearchArgs, _LogsErrorCountArgs, _TracesListArgs, _TracesGetArgs,
+)
+
+_register(
+    "logs_search",
+    "Search structured logs in VictoriaLogs using LogsQL. Use severity:ERROR for errors, event:db_query for DB events.",
+    _LogsSearchArgs,
+    logs_search,
+)
+_register(
+    "logs_error_count",
+    "Count errors per service over a time window (e.g. last 1h).",
+    _LogsErrorCountArgs,
+    logs_error_count,
+)
+_register(
+    "traces_list",
+    "List recent traces for a service from VictoriaTraces.",
+    _TracesListArgs,
+    traces_list,
+)
+_register(
+    "traces_get",
+    "Fetch a specific trace by ID to see full span details.",
+    _TracesGetArgs,
+    traces_get,
+)

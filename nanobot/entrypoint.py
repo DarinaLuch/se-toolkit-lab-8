@@ -31,6 +31,8 @@ def main() -> None:
     # MCP server env vars
     cfg["tools"]["mcpServers"]["lms"]["env"]["NANOBOT_LMS_BACKEND_URL"] = os.environ["NANOBOT_LMS_BACKEND_URL"]
     cfg["tools"]["mcpServers"]["lms"]["env"]["NANOBOT_LMS_API_KEY"] = os.environ["NANOBOT_LMS_API_KEY"]
+    cfg["tools"]["mcpServers"]["lms"]["env"]["NANOBOT_VICTORIALOGS_URL"] = os.environ.get("NANOBOT_VICTORIALOGS_URL", "http://victorialogs:9428")
+    cfg["tools"]["mcpServers"]["lms"]["env"]["NANOBOT_VICTORIATRACES_URL"] = os.environ.get("NANOBOT_VICTORIATRACES_URL", "http://victoriatraces:10428")
 
     # Write resolved config to a temp file
     tmp = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
