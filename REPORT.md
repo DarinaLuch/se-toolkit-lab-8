@@ -109,3 +109,85 @@ trace_id=75a04e25c0afe46e278bae3e8170e9d4 from the error log matched the trace i
      3. Post-fix response to "What went wrong?" showing the real underlying failure
      4. Healthy follow-up report or transcript after recovery -->
 
+
+## Task 4A — Multi-step investigation
+
+**Question asked:** "What went wrong?"
+
+**Agent response:**
+
+I found 4 errors in the last hour from the Learning Management Service. Let me investigate what those errors are:
+
+Found the issue! There are **4 database connection errors** in the last hour. All errors show:
+**Error:** `[Errno -2] Name or service not known`
+
+This is a **DNS resolution failure** - the system is trying to connect to a database service but cannot resolve the hostname. Let me get more details from one of the traces:
+
+## What Went Wrong: Database Connection Failure
+**Root Cause:** DNS resolution failure for the database service
+**Details:**
+- **4 errors** in the last hour (starting around 05:56 UTC)
+- **Error message:** `[Errno -2] Name or service not known`
+- **Affected service:** Learning Management Service (LMS)
+- **Impact:** Database queries are failing, causing requests to return 404 errors
+
+The agent used both log evidence (db_query errors with severity:ERROR) and trace evidence (traces_get to reconstruct the request timeline).
+
+## Task 4B — Proactive health check
+
+The agent created a cron job (ID: `1c3663ab`) running every 2 minutes.
+
+**Proactive failure report posted automatically at 06:56 UTC:**
+
+Health Check Report (2026-03-31 06:56 UTC)
+⚠️ Errors detected!
+- Error count (last 2 min): 1 error
+- Service affected: Learning Management Service
+- Error type: unhandled_exception
+- Endpoint: /learners/
+- Trace ID: c09f03df83885b9bf349309d858c9189
+
+Timeline:
+1. 06:54:22.874 — Request started on /learners/
+2. 06:54:22.876 — Auth succeeded
+3. 06:54:22.937 — Unhandled exception occurred
+
+The agent posted this report proactively without being asked, while the failure was still present.
+
+## Task 4C — Bug fix and recovery
+
+### Root cause
+The planted bug was in `backend/app/db/learners.py`. The `read_learners` and `create_learner` functions had no `try/except` block, so when PostgreSQL was down, the raw database exception propagated directly to FastAPI's `unhandled_exception_handler` in `main.py`. This logged `unhandled_exception` instead of `db_query`, hiding the real error from the observability tools.
+
+By contrast, `backend/app/db/items.py` already had the correct pattern: a `try/except` that logs `db_query` with the error field before re-raising.
+
+### Fix
+Added `try/except` logging to both `read_learners` and `create_learner` in `backend/app/db/learners.py`, matching the pattern in `items.py`:
+```python
+try:
+    logger.info("db_query", extra={"event": "db_query", "table": "learner", "operation": "select"})
+    # ... db operation ...
+except Exception as exc:
+    logger.error(
+        "db_query",
+        extra={"event": "db_query", "table": "learner", "operation": "select", "error": str(exc)},
+    )
+    raise
+```
+
+### Post-fix failure check
+After rebuilding and stopping PostgreSQL, the agent's "What went wrong?" response showed the real underlying failure:
+
+- Error type: db_query (not unhandled_exception)
+- Error message: [Errno -2] Name or service not known (DNS resolution failure for database)
+- Additional: connection is closed (existing connections dropped)
+- Endpoints affected: /items/ → 404, /learners/ → 500
+
+### Healthy follow-up
+After restarting PostgreSQL, the proactive health check reported:
+
+Health Check Report — System looks healthy! ✅
+- Time window: Last 2 minutes
+- Total errors: 0
+- Services with errors: None
+- No issues detected.
