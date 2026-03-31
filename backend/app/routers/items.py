@@ -1,27 +1,17 @@
 """Router for item endpoints — reference implementation."""
-
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.exc import IntegrityError
 from sqlmodel.ext.asyncio.session import AsyncSession
-
 from app.database import get_session
 from app.db.items import create_item, read_item, read_items, update_item
 from app.models.item import ItemCreate, ItemRecord, ItemUpdate
 
 router = APIRouter()
 
-
 @router.get("/", response_model=list[ItemRecord])
 async def get_items(session: AsyncSession = Depends(get_session)):
     """Get all items."""
-    try:
-        return await read_items(session)
-    except Exception as exc:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Items not found",
-        ) from exc
-
+    return await read_items(session)
 
 @router.get("/{item_id}", response_model=ItemRecord)
 async def get_item(item_id: int, session: AsyncSession = Depends(get_session)):
@@ -32,7 +22,6 @@ async def get_item(item_id: int, session: AsyncSession = Depends(get_session)):
             status_code=status.HTTP_404_NOT_FOUND, detail="Item not found"
         )
     return item
-
 
 @router.post("/", response_model=ItemRecord, status_code=201)
 async def post_item(body: ItemCreate, session: AsyncSession = Depends(get_session)):
@@ -50,7 +39,6 @@ async def post_item(body: ItemCreate, session: AsyncSession = Depends(get_sessio
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail="parent_id does not reference an existing item",
         )
-
 
 @router.put("/{item_id}", response_model=ItemRecord)
 async def put_item(
