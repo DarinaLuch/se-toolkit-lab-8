@@ -63,3 +63,27 @@ The agent called lms_labs first, listed all 8 labs, then asked: "Which lab would
      2. Code fix (diff or description)
      3. Post-fix response to "What went wrong?" showing the real underlying failure
      4. Healthy follow-up report or transcript after recovery -->
+
+## Task 3C — Observability MCP tools
+
+**Normal conditions — "Any errors in the last hour?"**
+
+> I'll check for errors in the last hour using the logging system.
+> Good news! There were **0 errors** in the last hour across all services. The system is running smoothly. 🎉
+
+**Failure conditions (postgres stopped, 3 failed requests) — "Any errors in the last hour?"**
+
+> I'll check for errors in the last hour using the logging system.
+> Yes, there are **3 errors** in the last hour, all from the **Learning Management Service**. Let me get more details about these errors:
+>
+> **Yes, there are 3 errors in the last hour.**
+>
+> All errors are from the **Learning Management Service** and appear to be related to database connectivity issues:
+>
+> | Time | Event | Error |
+> |------|-------|-------|
+> | 05:39:22 | db_query | `[Errno -2] Name or service not known` |
+> | 05:39:21 | db_query | `[Errno -2] Name or service not known` |
+> | 05:39:20 | db_query | `[Errno -2] Name or service not known` |
+>
+> The error `Name or service not known` indicates a **DNS resolution failure** — the service could not reach the database host.
