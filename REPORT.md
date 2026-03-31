@@ -32,11 +32,16 @@ The agent called lms_labs first, listed all 8 labs, then asked: "Which lab would
 
 ## Task 2B — Web client
 
-<!-- Screenshot of a conversation with the agent in the Flutter web app -->
+<img width="951" height="992" alt="task2" src="https://github.com/user-attachments/assets/69beadca-5229-47c9-9bf8-30940aa42216" />
 
 ## Task 3A — Structured logging
 
+
 **Happy-path log excerpt (request_started → request_completed, status 200):**
+
+<img width="1916" height="1073" alt="3 1 2" src="https://github.com/user-attachments/assets/1d6c541a-5e7b-46d4-9350-3c27a222df3c" />
+<img width="1912" height="985" alt="3 1 1" src="https://github.com/user-attachments/assets/bba95376-9604-4ecd-b3d9-881f6f6ed775" />
+
 
 ```
 backend-1 | 2026-03-31 05:39:22,559 INFO [app.main] [trace_id=594a83120af4f4c7dbe29e4d0308e48c span_id=49f15afc5ac509e3 resource.service.name=Learning Management Service] - request_started
@@ -45,7 +50,10 @@ backend-1 | 2026-03-31 05:39:22,561 INFO [app.db.items] [trace_id=594a83120af4f4
 backend-1 | 2026-03-31 05:39:22,693 INFO [app.main] [trace_id=594a83120af4f4c7dbe29e4d0308e48c span_id=49f15afc5ac509e3 resource.service.name=Learning Management Service] - request_completed
 ```
 
+
 **Error-path log excerpt (db_query ERROR after postgres stopped):**
+
+<img width="1037" height="362" alt="3 2" src="https://github.com/user-attachments/assets/f78e0655-5b08-45b7-985b-16a5ad20402f" />
 
 ```
 backend-1 | 2026-03-31 05:56:51,570 INFO [app.db.items] [trace_id=75a04e25c0afe46e278bae3e8170e9d4 span_id=35652be9a2dd3c11 resource.service.name=Learning Management Service] - db_query
